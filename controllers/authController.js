@@ -39,7 +39,7 @@ async function loginUser(req, res) {
     const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRETE, {
       expiresIn: "1h",
     });
-    res.cookie("token", token, cookieOptions).send({ success: true });
+    res.send({ token });
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -60,7 +60,7 @@ async function loginUserWithMobile(req, res) {
     const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRETE, {
       expiresIn: "1h",
     });
-    res.cookie("token", token, cookieOptions).send({ success: true });
+    res.send({ token });
   } catch (err) {
     res.status(500).send(err.message);
   }
