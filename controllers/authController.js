@@ -44,4 +44,25 @@ async function loginUser(req, res) {
     res.status(500).send(err.message);
   }
 }
-module.exports = { registerUser, loginUser };
+
+// loginUser withh mobile
+async function loginUserWithMobile(req, res) {
+  try {
+    const { mobile, pin } = req.body;
+    const user = await getDb().collection("users").findOne({ mobile });
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+    const isMatch = await bcrypt.compare(pin, user.password);
+    if (!isMatch) {
+      return res.status(401).send("Invalid credentials");
+    }
+    const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRETE, {
+      expiresIn: "1h",
+    });
+    res.cookie("token", token, cookieOptions).send({ success: true });
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+}
+module.exports = { registerUser, loginUser, loginUserWithMobile };
