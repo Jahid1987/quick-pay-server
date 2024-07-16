@@ -1,10 +1,20 @@
 const express = require("express");
 const authenticateToken = require("../middleware/authMiddleware");
 const roleMiddleware = require("../middleware/roleMiddleware");
-const { sendMoney, cashOut } = require("../controllers/transectionController");
+const {
+  sendMoney,
+  cashOut,
+  createTransection,
+} = require("../controllers/transectionController");
 
 const router = express.Router();
 
+router.post(
+  "/create",
+  authenticateToken,
+  roleMiddleware("user"),
+  createTransection
+);
 router.post("/sendmoney", authenticateToken, roleMiddleware("user"), sendMoney);
 router.post("/cashout", authenticateToken, roleMiddleware("user"), cashOut);
 

@@ -1,17 +1,24 @@
 const { getDb } = require("../db/connection");
 
+async function createTransection(req, res) {
+  try {
+    const result = await getDb().collection("transections").insertOne(req.body);
+    res.status(201).send(result);
+  } catch (error) {
+    res.send(error);
+  }
+}
+
 async function sendMoney(req, res) {
   try {
     const { sender, receiver, sendAmount, minusAmount } = req.body;
-    const result = await getDb().collection("transections").insertOne(req.body);
-
     await getDb()
       .collection("users")
       .updateOne(
         { email: sender },
         {
           $inc: {
-            amount: -minusAmount,
+            balance: -minusAmount,
           },
         }
       );
@@ -21,16 +28,17 @@ async function sendMoney(req, res) {
         { email: receiver },
         {
           $inc: {
-            amount: sendAmount,
+            balance: sendAmount,
           },
         }
       );
 
-    res.status(201).send(result);
+    res.status(200).send({ update: true });
   } catch (error) {
     res.send(error);
   }
 }
+
 async function cashOut(req, res) {
   try {
     const { db } = await getDb();
@@ -40,4 +48,4 @@ async function cashOut(req, res) {
   }
 }
 
-module.exports = { sendMoney, cashOut };
+module.exports = { sendMoney, cashOut, createTransection };
