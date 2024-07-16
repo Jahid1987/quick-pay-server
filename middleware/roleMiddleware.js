@@ -1,7 +1,7 @@
 const { getDb } = require("../db/connection");
 
 function roleMiddleware(allowedRoles) {
-  console.log(allowedRoles);
+  // console.log(allowedRoles);
   return async (req, res, next) => {
     const user = await getDb()
       .collection("users")
