@@ -10,13 +10,21 @@ const cookieOptions = {
 // registerUser usign mongodb
 async function registerUser(req, res) {
   try {
-    const { name, pin, mobile, email, status, role } = req.body;
+    const { name, pin, mobile, email, status, role, photo } = req.body;
     const isExist = await getDb().collection("users").findOne({ email });
     if (isExist) {
       return res.status(409).send("This email is already exist.");
     }
     const hashedPin = await bcrypt.hash(pin, 10);
-    const user = { name, password: hashedPin, mobile, status, role, email };
+    const user = {
+      name,
+      password: hashedPin,
+      mobile,
+      status,
+      role,
+      email,
+      photo,
+    };
     const result = await getDb().collection("users").insertOne(user);
     res.status(201).send(result);
   } catch (err) {
