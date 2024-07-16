@@ -73,4 +73,23 @@ async function loginUserWithMobile(req, res) {
     res.status(500).send(err.message);
   }
 }
-module.exports = { registerUser, loginUser, loginUserWithMobile };
+
+// confirm pin
+async function confirmPin(req, res) {
+  try {
+    const { email, pin } = req.body;
+    const user = await getDb().collection("users").findOne({ email });
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+    const isMatch = await bcrypt.compare(pin, user.password);
+    if (!isMatch) {
+      return res.status(401).send("Invalid credentials");
+    }
+
+    res.send({ success: true });
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+}
+module.exports = { registerUser, loginUser, loginUserWithMobile, confirmPin };
