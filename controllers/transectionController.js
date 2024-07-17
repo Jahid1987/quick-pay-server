@@ -3,6 +3,20 @@ const { getDb } = require("../db/connection");
 
 async function getAllTransections(req, res) {
   try {
+    const transections = await getDb()
+      .collection("transections")
+      .find()
+      .toArray();
+    if (!transections) {
+      return res.status(404).send("transections not found");
+    }
+    res.status(200).send(transections);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+}
+async function getTransections(req, res) {
+  try {
     const email = req?.user?.email;
     const limit = parseInt(req?.query?.limit);
     const pipeline = [
@@ -137,5 +151,6 @@ module.exports = {
   updateBalance,
   cashOut,
   createTransection,
+  getTransections,
   getAllTransections,
 };

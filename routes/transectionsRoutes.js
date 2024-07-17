@@ -4,20 +4,33 @@ const roleMiddleware = require("../middleware/roleMiddleware");
 const {
   cashOut,
   createTransection,
-  getAllTransections,
+  getTransections,
   updateTransection,
   updateBalance,
+  getAllTransections,
 } = require("../controllers/transectionController");
 
 const router = express.Router();
+
+router.post(
+  "/getall",
+  authenticateToken,
+  roleMiddleware("admin"),
+  getAllTransections
+);
 
 router.get(
   "/",
   authenticateToken,
   roleMiddleware(["user", "agent"]),
-  getAllTransections
+  getTransections
 );
-router.patch("/:id", updateTransection);
+router.patch(
+  "/:id",
+  authenticateToken,
+  roleMiddleware("agent"),
+  updateTransection
+);
 router.post(
   "/create",
   authenticateToken,
