@@ -11,9 +11,13 @@ const cookieOptions = {
 async function registerUser(req, res) {
   try {
     const { name, pin, mobile, email, status, role, photo } = req.body;
-    const isExist = await getDb().collection("users").findOne({ email });
-    if (isExist) {
+    const emailExist = await getDb().collection("users").findOne({ email });
+    if (emailExist) {
       return res.status(409).send("This email is already exist.");
+    }
+    const mobileExist = await getDb().collection("users").findOne({ mobile });
+    if (mobileExist) {
+      return res.status(409).send("This mobile number is already exist.");
     }
     const hashedPin = await bcrypt.hash(pin, 10);
     const user = {
@@ -24,6 +28,7 @@ async function registerUser(req, res) {
       role,
       email,
       photo,
+      balance: 0,
     };
     const result = await getDb().collection("users").insertOne(user);
     res.status(201).send(result);

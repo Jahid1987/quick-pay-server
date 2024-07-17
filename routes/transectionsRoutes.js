@@ -12,37 +12,20 @@ const {
 
 const router = express.Router();
 
-router.post(
-  "/getall",
-  authenticateToken,
-  roleMiddleware("admin"),
-  getAllTransections
-);
-
+router.post("/getall", getAllTransections);
 router.get(
   "/",
   authenticateToken,
-  roleMiddleware(["user", "agent"]),
+  roleMiddleware(["user", "agent", "parchent"]),
   getTransections
 );
 router.patch(
   "/:id",
   authenticateToken,
-  roleMiddleware("agent"),
+  roleMiddleware(["agent"]),
   updateTransection
 );
-router.post(
-  "/create",
-  authenticateToken,
-  roleMiddleware("user"),
-  createTransection
-);
-router.post(
-  "/updatebalance",
-  authenticateToken,
-  roleMiddleware("user"),
-  updateBalance
-);
-router.post("/cashout", authenticateToken, roleMiddleware("user"), cashOut);
+router.post("/create", createTransection);
+router.post("/updatebalance", updateBalance);
 
 module.exports = router;

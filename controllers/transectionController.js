@@ -66,13 +66,9 @@ async function createTransection(req, res) {
 }
 
 async function updateTransection(req, res) {
-  console.log(req.body.status);
   try {
-    const status = req.body.status;
     const filter = { _id: new ObjectId(req.params.id) };
-    const updateDoc = {
-      $set: { status },
-    };
+
     // await updateBalance(req, res);
     const result = await getDb()
       .collection("transections")

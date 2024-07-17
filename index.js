@@ -5,6 +5,7 @@ const cookiePerser = require("cookie-parser");
 const { connectDb } = require("./db/connection");
 const app = express();
 const port = process.env.PORT || 5000;
+
 // routes imported
 const authRoutes = require("./routes/authRoutes");
 const transectionsRoutes = require("./routes/transectionsRoutes");
